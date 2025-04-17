@@ -25,7 +25,7 @@ func (b *BankAccount) Deposit(amount int) *Memento {
 	b.current++
 	fmt.Println("Deposited", amount, "Balance =", b.balance)
 	return &m
-}git
+}
 
 func (b *BankAccount) Restore(m *Memento) {
 	if m != nil {

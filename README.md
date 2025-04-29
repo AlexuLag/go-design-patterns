@@ -10,6 +10,9 @@ This repository contains implementations of various design patterns in Go progra
 - **Simple Memento**: Basic implementation of the Memento pattern that allows capturing and storing an object's internal state
 - **Memento with Undo/Redo**: Advanced implementation with undo and redo functionality
 
+#### State
+- **State Classic**: Implementation of the State pattern that allows an object to alter its behavior when its internal state changes. The example demonstrates a light switch that can be in On or Off states.
+
 ### Creational Patterns
 
 #### Builder
@@ -33,6 +36,8 @@ go run .
 ├── memento/
 │   ├── simple-memento/           # Basic implementation of Memento pattern
 │   └── memento-undo-redo/        # Memento with undo/redo functionality
+├── state/
+│   └── state-classic/            # Classic implementation of State pattern
 └── functional-builder/           # Functional approach to the Builder pattern
 ```
 

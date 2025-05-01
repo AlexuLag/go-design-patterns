@@ -13,6 +13,7 @@ This repository contains implementations of various design patterns in Go progra
 #### State
 - **State Classic**: Implementation of the State pattern that allows an object to alter its behavior when its internal state changes. The example demonstrates a light switch that can be in On or Off states.
 - **State Rules**: Alternative implementation using a rules-based approach with a finite state machine. Demonstrates a phone system with states like OffHook, Connecting, Connected, OnHold, and OnHook.
+- **State Switch**: Implementation using a switch statement to handle state transitions. Demonstrates a code lock system with states Locked, Failed, and Unlocked, showing how to handle state changes in a more procedural way.
 
 ### Creational Patterns
 
@@ -39,7 +40,8 @@ go run .
 │   └── memento-undo-redo/        # Memento with undo/redo functionality
 ├── state/
 │   ├── state-classic/            # Classic implementation of State pattern
-│   └── state-rules/              # Rules-based implementation of State pattern
+│   ├── state-rules/              # Rules-based implementation of State pattern
+│   └── state-switch/             # Switch-based implementation of State pattern
 └── functional-builder/           # Functional approach to the Builder pattern
 ```
 

@@ -20,6 +20,19 @@ This repository contains implementations of various design patterns in Go progra
 #### Builder
 - **Functional Builder**: Implementation of the Builder pattern using functional programming concepts in Go
 
+### Structural Patterns
+
+#### Flyweight
+- **Basic Flyweight**: Implementation of the Flyweight pattern that demonstrates how to share common parts of object state among multiple objects. The example shows how to efficiently store and reuse names in a user system, reducing memory usage by storing common strings only once.
+
+## SOLID Principles
+
+### Single Responsibility Principle (SRP)
+- **Journal Example**: Implementation demonstrating the Single Responsibility Principle through a journal system. Shows how to separate concerns between journal management and persistence, with examples of both violating and following the principle.
+
+### Open/Closed Principle (OCP)
+- **Product Filter Example**: Implementation demonstrating the Open/Closed Principle through a product filtering system. Shows how to extend functionality without modifying existing code by using interfaces and specifications. Includes examples of color and size filtering, and how to combine specifications.
+
 ## Getting Started
 
 Each pattern implementation is contained in its own directory with a dedicated `main.go` file which demonstrates how to use the pattern.
@@ -42,6 +55,9 @@ go run .
 │   ├── state-classic/            # Classic implementation of State pattern
 │   ├── state-rules/              # Rules-based implementation of State pattern
 │   └── state-switch/             # Switch-based implementation of State pattern
+├── flyweight/                    # Implementation of the Flyweight pattern
+├── single-responsability/        # Implementation of Single Responsibility Principle
+├── open-close/                   # Implementation of Open/Closed Principle
 └── functional-builder/           # Functional approach to the Builder pattern
 ```
 

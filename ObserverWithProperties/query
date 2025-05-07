@@ -1,0 +1,80 @@
+WITH latest_claims AS (
+  SELECT 
+    CLA_RESOURCE_ID,
+    MAX(cla_claim_id) as latest_claim_id
+  FROM `WHOWNER.BT_CM_CLAIMS_V1` c
+  WHERE c.cla_resource = 'order'
+    AND c.CLA_DATE_CLAIM_OPENED_DT BETWEEN @ds_start_date AND @ds_end_date
+  GROUP BY CLA_RESOURCE_ID
+),
+latest_tracks AS (
+  SELECT 
+    MAX(track.ds) as ds,
+    track.PATH,
+    track.type,
+    track.usr.user_id,
+    SAFE_CAST(JSON_EXTRACT_SCALAR(track.EVENT_DATA, '$.order_id') AS NUMERIC) as order_id,
+    SAFE_CAST(JSON_EXTRACT_SCALAR(track.EVENT_DATA, '$.is_same_variation') AS BOOL) as is_same_variation,
+    JSON_EXTRACT_SCALAR(track.EVENT_DATA, '$.item_type') as item_type,
+    track.site
+  FROM `meli-bi-data.MELIDATA.TRACKS` track
+  INNER JOIN `WHOWNER.BT_ORD_ORDERS` o 
+    ON SAFE_CAST(JSON_EXTRACT_SCALAR(track.EVENT_DATA, '$.order_id') AS NUMERIC) = o.ORD_ORDER_ID
+  WHERE track.ds>= @ds_start_date
+    AND o.ORD_CREATED_DT BETWEEN @ds_start_date AND @ds_end_date
+    AND o.ord_item.shipping.logistic_type = 'fulfillment'
+    AND track.path = '/changes/picker/same_variation'
+    AND 'test_user' NOT IN UNNEST(track.usr.user_tags)
+  GROUP BY 
+    track.PATH,
+    track.type,
+    track.usr.user_id,
+    SAFE_CAST(JSON_EXTRACT_SCALAR(track.EVENT_DATA, '$.order_id') AS NUMERIC),
+    SAFE_CAST(JSON_EXTRACT_SCALAR(track.EVENT_DATA, '$.is_same_variation') AS BOOL),
+    JSON_EXTRACT_SCALAR(track.EVENT_DATA, '$.item_type'),
+    track.site
+),
+latest_claims_data AS (
+  SELECT 
+    c.cla_claim_id,
+    c.cla_type,
+    c.cla_status_id,
+    SAFE_CAST(c.CLA_RESOURCE_ID AS NUMERIC) as CLA_RESOURCE_ID_NUM
+  FROM `WHOWNER.BT_CM_CLAIMS_V1` c
+  INNER JOIN latest_claims lc
+    ON c.CLA_RESOURCE_ID = lc.CLA_RESOURCE_ID
+    AND c.cla_claim_id = lc.latest_claim_id
+  WHERE c.CLA_DATE_CLAIM_OPENED_DT BETWEEN @ds_start_date AND @ds_end_date
+    AND c.cla_resource = 'order'
+),
+changes_data AS (
+  SELECT
+    CHANGE_RESOURCE_ID,
+    change_resource,
+    change_type,
+    change_subtype
+  FROM `WHOWNER.BT_PP_CHANGES`
+  WHERE CHANGE_DATE_CREATED_DT BETWEEN @ds_start_date AND @ds_end_date
+)
+SELECT 
+  lt.*,
+  IF(change.change_resource_id IS NULL, FALSE, TRUE) as has_change,
+  change.CHANGE_RESOURCE_ID,
+  change.change_resource,
+  change.change_type,
+  change.change_subtype,
+  claim.cla_claim_id,
+  claim.cla_type,
+  claim.cla_status_id,
+  CASE 
+    WHEN claim.cla_type = 'change' AND change.change_type = 'change' THEN 'cambio'
+    WHEN claim.cla_type = 'mediations' AND change.change_type = 'replace' THEN 'reemplazo'
+    WHEN claim.cla_type = 'returns' AND change.change_type IS NULL THEN 'devolucion'
+    WHEN claim.cla_type = 'mediations' AND change.change_type IS NULL THEN 'mediacion'
+    ELSE 'sin claim'
+  END as tipo
+FROM latest_tracks lt
+LEFT JOIN changes_data change 
+  ON lt.order_id = change.CHANGE_RESOURCE_ID
+LEFT JOIN latest_claims_data claim
+  ON claim.CLA_RESOURCE_ID_NUM = lt.order_id

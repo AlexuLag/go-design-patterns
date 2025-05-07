@@ -1,0 +1,28 @@
+SELECT 
+    changes.CHANGE_ID,
+    changes.CLA_CLAIM_ID,
+    changes.SIT_SITE_ID,
+    changes.CHANGE_TYPE,
+    changes.CHANGE_STATUS,
+    changes.CHANGE_STATUS_DETAIL,
+    changes.CHANGE_PURCHASE_ID,
+    orders.ORD_ORDER_ID,
+    orders.ORD_SHIPPING.ID,
+    COALESCE(orders.ORD_SHIPPING.LOGISTIC_TYPE, 'none') AS LOGISTIC_TYPE,
+    COALESCE(orders.ORD_STATUS_CANCEL_DETAIL.CODE, 'none') AS CANCEL_CODE,
+    COALESCE(orders.ORD_STATUS_CANCEL_DETAIL.DESCRIPTION, 'none') AS CANCEL_DESCRIPTION,
+    claims_history.CLA_ST_PREV_STATE_NAME,
+    claims_history.CLA_ST_NAME,
+    claims_history.CLA_ST_EVENT_TYPE,
+    claims.CLA_REASON_CLAIM_CLOSED,
+    claims.CLA_DATE_CLAIM_CLOSED_DT
+FROM `WHOWNER.BT_CM_CLAIMS_V1` AS claims
+INNER JOIN `WHOWNER.BT_PP_CHANGES` AS changes
+    ON claims.CLA_CLAIM_ID = changes.CLA_CLAIM_ID
+INNER JOIN `WHOWNER.BT_CM_CLA_STATE_HISTORY` AS claims_history
+    ON claims.CLA_CLAIM_ID = claims_history.CLA_CLAIM_ID
+    AND claims_history.CLA_ST_CURRENT = true
+LEFT JOIN `WHOWNER.BT_ORD_ORDERS` AS orders
+    ON orders.CRT_PURCHASE_ID = changes.CHANGE_PURCHASE_ID
+WHERE claims.CLA_DATE_CLAIM_CLOSED_DT = "2025-03-02"
+    AND claims.CLA_REASON_CLAIM_CLOSED = "change_cancelled_meli"

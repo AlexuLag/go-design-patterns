@@ -15,3 +15,4 @@ type ColorSpecification struct {
 func (spec ColorSpecification) IsSatisfied(p *Product) bool {
 	return p.color == spec.color
 }
+

@@ -23,6 +23,10 @@ This repository contains implementations of various design patterns in Go progra
 - **State Rules**: Alternative implementation using a rules-based approach with a finite state machine. Demonstrates a phone system with states like OffHook, Connecting, Connected, OnHold, and OnHook.
 - **State Switch**: Implementation using a switch statement to handle state transitions. Demonstrates a code lock system with states Locked, Failed, and Unlocked, showing how to handle state changes in a more procedural way.
 
+#### Visitor
+- **Classic Visitor**: Implementation of the Visitor pattern that allows adding new operations to existing object structures without modifying them. The example demonstrates a mathematical expression evaluator and printer, showing how to separate algorithms from the objects they operate on.
+- **Functional Visitor**: Alternative implementation of the Visitor pattern using functional programming concepts in Go, providing a more flexible and composable approach to visiting object structures.
+
 ### Creational Patterns
 
 #### Builder
@@ -90,6 +94,8 @@ go run .
 │   ├── state-classic/            # Classic implementation of State pattern
 │   ├── state-rules/              # Rules-based implementation of State pattern
 │   └── state-switch/             # Switch-based implementation of State pattern
+├── classic-visitor/              # Classic implementation of the Visitor pattern
+├── functional-visitor/           # Functional implementation of the Visitor pattern
 ├── Factory/                      # Factory pattern implementation
 ├── Prototype/                    # Prototype pattern implementation
 ├── Singleton/                    # Singleton pattern implementation

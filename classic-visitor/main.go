@@ -17,7 +17,8 @@ func main() {
 			right: &DoubleExpression{3},
 		},
 	}
-	ep := NewExpressionPrinter()
+	
+	ep := NewExpressionPrinter()	
 	e.Accept(ep)
 
 	ee := &ExpressionEvaluator{}

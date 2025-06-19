@@ -27,6 +27,9 @@ This repository contains implementations of various design patterns in Go progra
 - **Classic Visitor**: Implementation of the Visitor pattern that allows adding new operations to existing object structures without modifying them. The example demonstrates a mathematical expression evaluator and printer, showing how to separate algorithms from the objects they operate on.
 - **Functional Visitor**: Alternative implementation of the Visitor pattern using functional programming concepts in Go, providing a more flexible and composable approach to visiting object structures.
 
+#### Mediator
+- **Basic Mediator**: Implementation of the Mediator pattern that facilitates communication between objects (colleagues) through a central mediator. The example demonstrates a chat room where participants send messages to each other via the mediator, decoupling the participants from direct references to each other.
+
 ### Creational Patterns
 
 #### Builder
@@ -108,9 +111,6 @@ go run .
 ├── open-close/                   # Implementation of Open/Closed Principle
 ├── dependency-inversion/         # Implementation of Dependency Inversion Principle
 ├── LambdaInGo/                   # Lambda functionality examples
+├── mediator/                     # Implementation of the Mediator pattern
 └── functional-builder/           # Functional approach to the Builder pattern
 ```
-
-## Requirements
-
-- Go 1.16+
